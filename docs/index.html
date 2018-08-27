@@ -1,0 +1,165 @@
+
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="google-site-verification" content="9wCMDG8k0EKjXI4tijRBLmBG4TcSBgLJzds-7Ek8ztM" />
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="css/normalize.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="css/cayman.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="css/github-light.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">php-twitter-webhook-account-activity-api</h1>
+      <h2 class="project-tagline">A Simple PHP Support for Twitter Webhook implementation & Account Activity API subscription.</h2>
+      <a href="https://github.com/sadaimudiNaadhar/php-twitter-webhook-account-activity-api" class="btn">View on GitHub</a>
+      <a href="https://github.com/sadaimudiNaadhar/php-twitter-webhook-account-activity-api/archive/master.zip" class="btn">Download .zip</a>
+      
+    </section>
+
+    <section class="main-content">
+
+<h1>
+<a id="header-1" class="anchor" href="#header-1" aria-hidden="true"><span class="octicon octicon-link"></span></a>INTRODUCTION</h1>
+
+<p>The Account Activity API provides you the ability to subscribe to realtime activities related to a user account via webhooks. This means that you can receive realtime Tweets, Direct Messages, and other account events from one or more of your owned or subscribed accounts through a single connection.</p>
+<h4>
+  <a id="header-4" class="anchor" href="#header-4" aria-hidden="true"><span class="octicon octicon-link"></span></a>Supported Activity types
+</h4>
+
+<ul>
+  <li>Tweets
+  <li>@mentions</li>
+  <li>Replies</li>
+  <li>Retweets</li>
+  <li>Quote Tweets</li>
+  <li>Retweets of Quoted Tweets</li>
+  <li>Likes</li>
+  <li>Subscription Revokes</li>
+  <li>Follows</li>
+  <li>Blocks</li>
+  <li>Mutes</li>
+  <li>Send Direct Messages</li>
+  <li>Receive Direct Messages</li>
+  <li>Typing indicators</li>
+  <li>Read receipts</li>
+  <li>Tweet deletes</li>
+</ul>
+<p>The Account Activity API is a webhook-based API that sends account events to a web app you develop, deploy and host. 
+  <a href="https://developer.twitter.com/en/docs/accounts-and-users/subscribe-account-activity/overview" target="_blank" >Check here more</a>
+</p>
+
+<h2>
+<a id="header-2" class="anchor" href="#header-2" aria-hidden="true"><span class="octicon octicon-link"></span></a>Requirements</h2>
+
+
+  <ul>
+    <li>
+        <a href="https://github.com/abraham/twitteroauth" >Twitteroauth </a>Package
+    </li>
+    <li>
+        Domain with SSL support
+    </li>
+     <li>
+        Twitter App
+    </li>
+  </ul>
+
+
+<h2>
+<a id="header-4" class="anchor" href="#header-2" aria-hidden="true"><span class="octicon octicon-link"></span></a>Setup
+</h2>
+
+<ol>
+<li>Create a Twitter App</li>
+<li>Configure your Callback URL, App keys in config.php</li>
+</ol>
+<pre><code>//config.php
+define('CONSUMER_KEY', 'YOUR CONSUMER KEY');
+define('CONSUMER_SECRET', 'YOUR CONSUMER SECRET');
+define('OAUTH_CALLBACK', 'YOUR CALLBACK URL');
+</code></pre>
+
+<h2>
+<a id="header-5" class="anchor" href="#header-2" aria-hidden="true"><span class="octicon octicon-link"></span></a>Securing Your webhook
+</h2>
+<p>Below code should be implemented in your webhook file. During Webhook registration Twitter will send a crc_token parameter.
+All events where triggered to this file after the webhook registration. Please go through <a href="https://developer.twitter.com/en/docs/accounts-and-users/subscribe-account-activity/guides/securing-webhooks" target="_blank">securing-webhooks</a></p> 
+<pre><code>// webhook.php
+include "../config.php";
+if(isset($_REQUEST['crc_token'])) {
+  $signature = hash_hmac('sha256', $_REQUEST['crc_token'], CONSUMER_SECRET, true);
+  $response['response_token'] = 'sha256='.base64_encode($signature);
+  print json_encode($response);
+} else {   
+
+  // Here You Recieve Realtime Webhook Events
+  // use $_REQUEST['favorite_events'] for favourite event.
+
+}
+</code></pre>
+
+<h2>
+<a id="header-5" class="anchor" href="#header-2" aria-hidden="true"><span class="octicon octicon-link"></span></a>1. Register Webhook
+</h2>
+<pre><code>/* Create a TwitterOauth object with consumer/user tokens. */
+$connection = new TwitterOAuth(CONSUMER_KEY, CONSUMER_SECRET, $access_token['oauth_token'], $access_token['oauth_token_secret']);
+$url = "Your Webhook URL";
+$content = $connection->post("account_activity/all/your-env_name/webhooks", ["url" => $url]);
+</code></pre>
+<h3>
+<a id="header-5" class="anchor" href="#header-2" aria-hidden="true"><span class="octicon octicon-link"></span></a>Response 
+</h3>
+<pre><code>{
+  "id": "1234567890",
+  "url": "https://your_domain.com/webhook/twitter",
+  "valid": true,
+  "created_at": "2016-06-02T23:54:02Z"
+}
+</code></pre>
+
+<h2>
+<a id="header-5" class="anchor" href="#header-2" aria-hidden="true"><span class="octicon octicon-link"></span></a>2. Subscribe User to Webhook
+</h2>
+<pre><code>/* Create a TwitterOauth object with consumer/user tokens. */
+$connection = new TwitterOAuth(CONSUMER_KEY, CONSUMER_SECRET, $access_token['oauth_token'], $access_token['oauth_token_secret']);
+$content = $connection->post("account_activity/all/your-env_name/subscriptions");  
+// Subscribes user to a webhook. Returns 200 status.
+</code></pre>
+
+<h2>
+<a id="header-5" class="anchor" href="#header-2" aria-hidden="true"><span class="octicon octicon-link"></span></a>3. Update Your Webhook File
+</h2>
+<pre><code>// webhook.php
+include "../config.php";
+if(isset($_REQUEST['crc_token'])) {
+  $signature = hash_hmac('sha256', $_REQUEST['crc_token'], CONSUMER_SECRET, true);
+  $response['response_token'] = 'sha256='.base64_encode($signature);
+  print json_encode($response);
+} else {   
+
+  // Here You Recieve Realtime Webhook Events
+  // Writing the recieved events  to file
+  $myfile = fopen("events.txt", "w") or die("Unable to open file!");
+  $txt = json_encode($_REQUEST);
+  fwrite($myfile, $txt);
+  fclose($myfile);
+
+}
+</code></pre>
+<p>After User subscription. Log into Twitter (use the subscribed Twitter Account), Then trigger an event Eg: favorite a Tweet, send a direct message, retweet a post. Then check the directory you can see a text file "events.txt" with event payloads</p>
+
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/sadaimudiNaadhar/php-twitter-webhook-account-activity-api">php-twitter-webhook-account-activity-api</a> is maintained by <a href="https://github.com/sadaimudiNaadhar">sadaimudiNaadhar</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> </span>
+      </footer>
+
+    </section>
+  </body>
+</html>
+
