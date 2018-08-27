@@ -26,5 +26,5 @@ Supported Activity types
 The Account Activity API is a webhook-based API that sends account events to a web app you develop, deploy and host. 
 [Check here more](https://developer.twitter.com/en/docs/accounts-and-users/subscribe-account-activity/overview)
 ## Documentation
-- Check [here](https://sadaimudinaadhar.github.io/php-twitter-webhook-account-activity-api/) Package
+- Check [here](https://sadaimudinaadhar.github.io/php-twitter-webhook-account-activity-api/) 
 
