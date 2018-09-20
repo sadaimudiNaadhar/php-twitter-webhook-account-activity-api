@@ -9,7 +9,7 @@
     <meta name="description" content="PHP Twitter Webhook Account Activity API by sadaimudiNaadhar is a PHP support for Twitter Account Activity API & subscriptions. Check https://github.com/sadaimudiNaadhar , https://github.com/sadaimudiNaadhar/php-twitter-webhook-account-activity-api">
      <meta name="google-site-verification" content="9wCMDG8k0EKjXI4tijRBLmBG4TcSBgLJzds-7Ek8ztM" />
     <meta name="keywords" content="php twitter webhook account activity api, twitter webhook, account activity api github, php webhook twitter,
-    sadaimudiNaadhar,https://github.com/sadaimudiNaadhar,https://github.com/sadaimudiNaadhar/php-twitter-webhook-account-activity-api,twitter, php, webhook, api, crc_token, Securing Your webhook, Register Webhook, Subscribe User to Webhook, Tweets, @mentions, Replies, Retweets, Quote Tweets, Retweets of Quoted Tweets, Likes, Subscription Revokes, Follows, Blocks, Mutes, Send Direct Messages, Receive Direct Messages, Typing indicators, Read receipts, Tweet deletes " />
+    sadaimudiNaadhar,https://github.com/sadaimudiNaadhar,https://github.com/sadaimudiNaadhar/php-twitter-webhook-account-activity-api,twitter, php, sadai mudi naadhar, api, crc_token, Securing Your webhook, Register Webhook, Subscribe User to Webhook, Tweets, @mentions, Replies, Retweets, Quote Tweets, Retweets of Quoted Tweets, Likes, Subscription Revokes, Follows, Blocks, Mutes, Send Direct Messages, Receive Direct Messages, Typing indicators, Read receipts, Tweet deletes " />
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" type="text/css" href="css/normalize.css" media="screen">
     <link rel="stylesheet" type="text/css" href="css/cayman.css" media="screen">
@@ -157,6 +157,53 @@ if(isset($_REQUEST['crc_token'])) {
 }
 </code></pre>
 <p>After User subscription. Log into Twitter (use the subscribed Twitter Account), Then trigger an event Eg: favorite a Tweet, send a direct message, retweet a post. Then check the directory you can see a text file "events.txt" with event payloads</p>
+
+
+<h2>
+<a id="header-6" class="anchor" href="#header-2" aria-hidden="true"><span class="octicon octicon-link"></span></a>4. Checking Webhook Status using Bearer Token
+</h2>
+<pre><code>// appcall.php
+/* Build TwitterOAuth object with client credentials. */
+$connection = new TwitterOAuth(CONSUMER_KEY, CONSUMER_SECRET);
+
+$request_token = $connection->oauth2('oauth2/token', ['grant_type' => 'client_credentials']);
+$connection = new TwitterOAuth(CONSUMER_KEY, CONSUMER_SECRET, $request_token->access_token);
+//$content = $connection->get("account_activity/all/webhooks");
+$content = $connection->get("account_activity/all/your:envName/subscriptions/list");
+print_r($content);
+</code></pre>
+<p>Returns a list of the current All Activity type subscriptions. Note that the /list endpoint requires application-only OAuth, so requests should be made using a bearer token instead of user context.</p>
+
+
+<h2>
+<a id="header-7" class="anchor" href="#header-2" aria-hidden="true"><span class="octicon octicon-link"></span></a>5. 
+Reference
+</h2>
+<p>API call's using Bearer Token. Call these endpoints from appcall.php .</p>
+<ul>
+  <li>
+    GET account_activity/all/webhooks
+    <p style="font-size: 15px;color: #368cd6;">
+      Returns all environments, webhook URLs and their statuses for the authenticating app. Currently, only one webhook URL can be registered to each environment.
+    </p>
+  </li>
+  <li>
+    GET account_activity/all/:env_name/subscriptions/list
+    <p style="font-size: 15px;color: #368cd6;">
+      Returns a list of the current All Activity type subscriptions. Note that the /list endpoint requires application-only OAuth, so requests should be made using a bearer token instead of user context.
+    </p>
+  </li>
+  <li>
+    GET account_activity/all/subscriptions/count
+     <p style="font-size: 15px;color: #368cd6;">
+      Returns the count of subscriptions that are currently active on your account for all activities. Note that the /count endpoint requires application-only OAuth, so that you should make requests using a bearer token instead of user context.
+    </p>
+  </li>
+</ul>
+<p>Refer all supported endpoints
+  <a href="https://developer.twitter.com/en/docs/accounts-and-users/subscribe-account-activity/api-reference/aaa-premium.html" target="_blank" >here </a>.
+</p>
+
 
 
       <footer class="site-footer">
