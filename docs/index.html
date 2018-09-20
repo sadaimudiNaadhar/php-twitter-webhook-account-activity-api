@@ -168,7 +168,6 @@ $connection = new TwitterOAuth(CONSUMER_KEY, CONSUMER_SECRET);
 
 $request_token = $connection->oauth2('oauth2/token', ['grant_type' => 'client_credentials']);
 $connection = new TwitterOAuth(CONSUMER_KEY, CONSUMER_SECRET, $request_token->access_token);
-//$content = $connection->get("account_activity/all/webhooks");
 $content = $connection->get("account_activity/all/your:envName/subscriptions/list");
 print_r($content);
 </code></pre>
@@ -200,7 +199,7 @@ Reference
     </p>
   </li>
 </ul>
-<p>Refer all supported endpoints
+<p>Check all supported endpoints
   <a href="https://developer.twitter.com/en/docs/accounts-and-users/subscribe-account-activity/api-reference/aaa-premium.html" target="_blank" >here </a>.
 </p>
 
