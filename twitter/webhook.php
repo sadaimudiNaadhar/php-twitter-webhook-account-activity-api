@@ -17,7 +17,6 @@ if(isset($_REQUEST['crc_token'])) {
 	
     	$eventJSON = file_get_contents('php://input');
 	$myfile = fopen("events.txt", "w") or die("Unable to open file!");
-	$myfile = fopen($path, "a");
         fwrite($myfile, $eventJSON . PHP_EOL);
         fclose($myfile);
 }
