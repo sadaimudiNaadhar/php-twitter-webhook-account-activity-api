@@ -14,11 +14,12 @@ if(isset($_REQUEST['crc_token'])) {
 	print json_encode($response);
 
 } else {
-    
+	
+    	$eventJSON = file_get_contents('php://input');
 	$myfile = fopen("events.txt", "w") or die("Unable to open file!");
-	$txt = json_encode($_REQUEST);
-	fwrite($myfile, $txt);
-	fclose($myfile);
+	$myfile = fopen($path, "a");
+        fwrite($myfile, $eventJSON . PHP_EOL);
+        fclose($myfile);
 }
 
 
