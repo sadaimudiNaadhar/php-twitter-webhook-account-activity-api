@@ -166,9 +166,9 @@ if(isset($_REQUEST['crc_token'])) {
 
   // Here You Recieve Realtime Webhook Events
   // Writing the recieved events  to file
-  $myfile = fopen("events.txt", "w") or die("Unable to open file!");
-  $txt = json_encode($_REQUEST);
-  fwrite($myfile, $txt);
+  $eventJSON = file_get_contents('php://input');
+	$myfile = fopen("events.txt", "w") or die("Unable to open file!");
+  fwrite($myfile, $eventJSON . PHP_EOL);
   fclose($myfile);
 
 }
